@@ -1,0 +1,18 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: ksp-ps1-block-sa-token
+  namespace: default
+spec:
+  severity: 9
+  message: "Block access to serviceaccount token"
+  selector:
+    matchLabels:
+      app: ps1-app
+  file:
+    matchDirectories:
+      - dir: /var/run/secrets/kubernetes.io/serviceaccount/
+        recursive: true
+  action:
+    Block: {}
+  tags: ["sensitive", "serviceaccount"]

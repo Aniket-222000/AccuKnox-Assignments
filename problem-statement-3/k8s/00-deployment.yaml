@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ps1-app
+  labels:
+    app: ps1-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ps1-app
+  template:
+    metadata:
+      labels:
+        app: ps1-app
+    spec:
+      containers:
+      - name: ps1-container
+        image: nginx:1.25-alpine
+        ports:
+        - containerPort: 80
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - echo "ps1-app started"

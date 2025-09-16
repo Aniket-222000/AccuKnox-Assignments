@@ -1,0 +1,31 @@
+apiVersion: security.kubearmor.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: ksp-ps1-zero-trust
+  namespace: default
+spec:
+  severity: 8
+  message: "Zero-trust: only allow approved process/file/network operations for ps1-app"
+  selector:
+    matchLabels:
+      app: ps1-app
+  action:
+    Allow: {}
+  process:
+    matchPaths:
+      - path: /usr/sbin/nginx
+      - path: /bin/sh
+      - path: /bin/bash
+  file:
+    matchDirectories:
+      - dir: /usr/share/nginx/html
+        recursive: true
+      - dir: /var/log/nginx
+        recursive: true
+        ownerOnly: false
+  network:
+    matchProtocols:
+      - protocol: tcp
+        fromSource:
+          - path: /usr/bin/curl
+  tags: ["zero-trust", "ps1", "whitelist"]
